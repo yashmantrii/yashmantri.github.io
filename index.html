@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yash Mantri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f5f0; --bg2: #eeeae0; --ink: #1a1714; --ink2: #6b6560; --ink3: #9e9890;
+  --accent: #c84b2f; --accent2: #e8784a; --border: rgba(26,23,20,0.12); --card: #ffffff;
+  --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif; --sans: 'Instrument Sans', sans-serif;
+}
+html { scroll-behavior: smooth; cursor: none; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; min-height: 100vh; cursor: none; }
+
+/* CUSTOM CURSOR */
+#cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s, background 0.2s; }
+#cursor-ring { position: fixed; width: 32px; height: 32px; border: 0.5px solid var(--accent); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: transform 0.15s ease, width 0.2s, height 0.2s, opacity 0.2s; opacity: 0.5; }
+body.cursor-hover #cursor { transform: translate(-50%,-50%) scale(2); background: var(--accent2); }
+body.cursor-hover #cursor-ring { width: 48px; height: 48px; opacity: 0.25; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; height: 56px; background: rgba(247,245,240,0.88); backdrop-filter: blur(14px); border-bottom: 0.5px solid var(--border); }
+.nav-logo { font-family: var(--serif); font-size: 18px; color: var(--ink); text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { font-size: 12px; font-weight: 500; color: var(--ink2); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 0.5px; background: var(--accent); transition: width 0.25s; }
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+.nav-clock { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.04em; }
+
+/* SECTIONS */
+section { padding: 6rem 2.5rem; max-width: 900px; margin: 0 auto; }
+
+/* HERO */
+.hero { padding-top: 10rem; padding-bottom: 5rem; }
+.hero-tag { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--accent); border: 0.5px solid var(--accent); border-radius: 2px; padding: 3px 8px; margin-bottom: 1.5rem; text-transform: uppercase; }
+.hero h1 { font-family: var(--serif); font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem; color: var(--ink); }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { font-size: 17px; color: var(--ink2); max-width: 520px; line-height: 1.65; margin-bottom: 2.5rem; min-height: 2.6em; }
+#typewriter-cursor { display: inline-block; width: 2px; height: 1em; background: var(--accent); margin-left: 2px; vertical-align: middle; animation: blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 3px; font-family: var(--sans); font-size: 13px; font-weight: 500; text-decoration: none; cursor: none; border: none; transition: all 0.18s; letter-spacing: 0.02em; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { background: var(--accent); }
+.btn-outline { background: transparent; color: var(--ink); border: 0.5px solid var(--border); }
+.btn-outline:hover { border-color: var(--ink2); background: var(--bg2); }
+
+/* STATS STRIP */
+.stats-strip { display: flex; flex-wrap: wrap; border: 0.5px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 4rem; background: var(--card); }
+.stat-item { flex: 1; min-width: 140px; padding: 1.2rem 1.5rem; border-right: 0.5px solid var(--border); cursor: none; transition: background 0.2s; }
+.stat-item:hover { background: var(--bg); }
+.stat-item:last-child { border-right: none; }
+.stat-num { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+.stat-num span { font-size: 1rem; color: var(--accent); }
+.stat-label { font-size: 11px; font-weight: 500; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; }
+.run-toggle { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--mono); font-size: 11px; color: var(--ink3); cursor: none; user-select: none; }
+.run-toggle input { cursor: none; accent-color: var(--accent); }
+.run-detail { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, opacity 0.3s; opacity: 0; margin-top: 0; padding: 0 1rem; background: var(--bg2); border-radius: 3px; font-size: 12px; color: var(--ink2); font-family: var(--mono); line-height: 1.8; }
+.run-detail.open { max-height: 100px; opacity: 1; margin-top: 0.75rem; padding: 0.75rem 1rem; }
+
+/* SECTION HEADERS */
+.section-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem; }
+h2.section-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 2.5rem; color: var(--ink); }
+
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+.about-text p { color: var(--ink2); margin-bottom: 1rem; line-height: 1.75; }
+.about-text p:last-child { margin-bottom: 0; }
+.about-sidebar { background: var(--card); border: 0.5px solid var(--border); border-radius: 4px; padding: 1.5rem; }
+.sidebar-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+.sidebar-row:last-child { border-bottom: none; }
+.sidebar-row span:first-child { color: var(--ink3); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+.sidebar-row span:last-child { color: var(--ink); font-weight: 500; }
+.hobbies { margin-top: 1.25rem; }
+.hobby-pill { display: inline-block; font-family: var(--mono); font-size: 11px; color: var(--ink2); border: 0.5px solid var(--border); border-radius: 2px; padding: 3px 8px; margin: 3px 3px 0 0; cursor: none; transition: all 0.18s; position: relative; }
+.hobby-pill:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.hobby-tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); font-family: var(--mono); font-size: 10px; padding: 4px 8px; border-radius: 2px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.18s; z-index: 10; }
+.hobby-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--ink); }
+.hobby-pill:hover .hobby-tooltip { opacity: 1; }
+
+/* PROJECTS */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; border: 0.5px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--border); }
+.project-card { background: var(--card); padding: 1.75rem; transition: background 0.18s; cursor: none; position: relative; overflow: hidden; }
+.project-card::before { content: ''; position: absolute; inset: 0; background: var(--accent); transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); z-index: 0; }
+.project-card:hover::before { transform: translateY(0); }
+.project-card > * { position: relative; z-index: 1; transition: color 0.25s; }
+.project-card:hover .project-num { color: rgba(255,255,255,0.5); }
+.project-card:hover .project-title { color: #fff; }
+.project-card:hover .project-desc { color: rgba(255,255,255,0.8); }
+.project-card:hover .tag { background: rgba(255,255,255,0.15); color: #fff; }
+.project-num { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+.project-title { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); margin-bottom: 0.6rem; line-height: 1.2; }
+.project-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; margin-bottom: 1rem; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.tag { font-family: var(--mono); font-size: 10px; color: var(--accent); background: rgba(200,75,47,0.07); border-radius: 2px; padding: 2px 6px; letter-spacing: 0.04em; transition: background 0.2s, color 0.2s; }
+
+/* EXPERIENCE */
+.exp-list { display: flex; flex-direction: column; }
+.exp-item { display: grid; grid-template-columns: 140px 1fr; gap: 0 2rem; padding: 2rem 0; border-bottom: 0.5px solid var(--border); cursor: none; }
+.exp-item:first-child { border-top: 0.5px solid var(--border); }
+.exp-date { font-family: var(--mono); font-size: 11px; color: var(--ink3); padding-top: 4px; letter-spacing: 0.03em; line-height: 1.6; }
+.exp-role { font-family: var(--serif); font-size: 1.15rem; color: var(--ink); margin-bottom: 2px; }
+.exp-company { font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 0.75rem; }
+.exp-body { overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s; }
+.exp-body.collapsed { max-height: 0; opacity: 0; }
+.exp-body.expanded { max-height: 200px; opacity: 1; }
+.exp-desc { font-size: 13px; color: var(--ink2); line-height: 1.7; }
+.exp-tags { margin-top: 0.75rem; }
+.exp-toggle { font-family: var(--mono); font-size: 11px; color: var(--ink3); margin-top: 6px; display: inline-block; transition: color 0.2s; cursor: none; }
+.exp-item:hover .exp-toggle { color: var(--accent); }
+
+/* DIVIDER */
+.divider { width: 100%; height: 0.5px; background: var(--border); max-width: 900px; margin-left: auto; margin-right: auto; }
+
+/* FOOTER */
+footer { max-width: 900px; margin: 0 auto; padding: 2rem 2.5rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+footer p { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.04em; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-family: var(--mono); font-size: 11px; color: var(--ink3); text-decoration: none; letter-spacing: 0.04em; transition: color 0.18s; text-transform: uppercase; cursor: none; }
+.footer-links a:hover { color: var(--accent); }
+
+/* FADE IN */
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+/* PROGRESS BAR */
+#progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 200; width: 0%; transition: width 0.1s linear; }
+
+@media (max-width: 640px) {
+  html, body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+  nav { padding: 0 1.25rem; }
+  .nav-clock { display: none; }
+  section { padding: 4rem 1.25rem; }
+  .about-grid { grid-template-columns: 1fr; }
+  .exp-item { grid-template-columns: 1fr; gap: 0.25rem; }
+  footer { padding: 2rem 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+  <a href="#" class="nav-logo">YM</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="mailto:yash.mantri@berkeley.edu">Contact</a></li>
+  </ul>
+  <div class="nav-clock" id="nav-clock"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Available · San Francisco, CA</div>
+  <h1>Yash<br><em>Mantri</em></h1>
+  <p class="hero-sub" id="typewriter-text"><span id="cursor-span"></span><span id="typewriter-cursor"></span></p>
+  <div class="hero-links">
+    <a href="mailto:yash.mantri@berkeley.edu" class="btn btn-primary">Get in touch →</a>
+    <a href="https://linkedin.com/in/yashmantri" target="_blank" class="btn btn-outline">LinkedIn</a>
+    <a href="https://github.com/yashmantri" target="_blank" class="btn btn-outline">GitHub</a>
+  </div>
+
+  <div class="stats-strip fade-in">
+    <div class="stat-item">
+      <div class="stat-num"><span id="run-count">0</span><span>+</span></div>
+      <div class="stat-label">Runs logged</div>
+      <label class="run-toggle">
+        <input type="checkbox" id="run-toggle" onchange="toggleRuns()"> details
+      </label>
+      <div class="run-detail" id="run-detail">
+        🏃 adding ~2 per week<br>
+        🏅 2 half marathons completed<br>
+        📍 Mostly trails around the Bay
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span id="hm-count">0</span><span>×</span></div>
+      <div class="stat-label">Half marathons</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span id="proj-count">0</span><span>+</span></div>
+      <div class="stat-label">AI agents shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span id="sudoku-count">0</span><span>+</span></div>
+      <div class="stat-label">Sudoku puzzles solved</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about" class="fade-in">
+  <p class="section-eyebrow">About</p>
+  <h2 class="section-title">Builder by nature,<br>analyst by training.</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a May 2026 Economics & Data Science graduate from UC Berkeley. I like working at the intersection of AI, strategy, and real business problems — building tools that actually change how teams make decisions.</p>
+      <p>At TCS I built an AI pricing agent across 5,000+ SKUs and got selected as one of three top interns out of 50+. At Deloitte I helped Fortune 500 MedTech clients find $50M+ in untapped market opportunity. I care about work that ships and numbers that move.</p>
+      <p>When I'm not at a laptop, I'm somewhere on a long run, deep in a chess game, or playing poker badly enough to stay humble.</p>
+    </div>
+    <div class="about-sidebar">
+      <div class="sidebar-row"><span>Based</span><span>San Francisco, CA</span></div>
+      <div class="sidebar-row"><span>Education</span><span>UC Berkeley '26</span></div>
+      <div class="sidebar-row"><span>Major</span><span>Econ + Data Science</span></div>
+      <div class="sidebar-row"><span>GPA</span><span>3.65</span></div>
+      <div class="sidebar-row"><span>Open to</span><span>Full-time roles</span></div>
+      <div class="hobbies">
+        <span class="hobby-pill">Running 🏃<span class="hobby-tooltip">145+ runs, 2 half marathons</span></span>
+        <span class="hobby-pill">Chess ♟<span class="hobby-tooltip">Always up for a game</span></span>
+        <span class="hobby-pill">Poker<span class="hobby-tooltip">Top-10 @ Berkeley × Stanford</span></span>
+        <span class="hobby-pill">Speedcubing<span class="hobby-tooltip">Sub-minute on a good day</span></span>
+        <span class="hobby-pill">Golf ⛳<span class="hobby-tooltip">Still working on the handicap</span></span>
+        <span class="hobby-pill">Cricket<span class="hobby-tooltip">Cal Cricket team</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects" class="fade-in">
+  <p class="section-eyebrow">Projects</p>
+  <h2 class="section-title">Things I've built.</h2>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-num">01</div>
+      <div class="project-title">Personal AI Job Hunter</div>
+      <p class="project-desc">Autonomous job search agent that scans job boards daily, scores fit against a personal profile, tailors resumes per role, drafts cover letters, and surfaces warm LinkedIn contacts — all on a schedule.</p>
+      <div class="tag-row"><span class="tag">Claude API</span><span class="tag">Cowork</span><span class="tag">n8n</span><span class="tag">Gmail</span></div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">02</div>
+      <div class="project-title">AI Pricing Agent — Auto Manufacturing</div>
+      <p class="project-desc">End-to-end AI agent analyzing supplier part attributes to estimate optimal pricing across 5,000+ SKUs. Projected 2–5% margin gains. Selected as top 3 intern of 50+ for business impact at TCS.</p>
+      <div class="tag-row"><span class="tag">Azure OpenAI</span><span class="tag">Python</span><span class="tag">Prompt Eng.</span><span class="tag">Vercel v0</span></div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">03</div>
+      <div class="project-title">Landslide Risk Visualizations</div>
+      <p class="project-desc">Interactive geospatial dashboards tracking real-time landslide probabilities. Improved detection precision 25–35% and extended early-warning lead times by 6–12 hours across multiple agencies.</p>
+      <div class="tag-row"><span class="tag">Python</span><span class="tag">QGIS</span><span class="tag">Power BI</span><span class="tag">GIS</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="fade-in">
+  <p class="section-eyebrow">Experience</p>
+  <h2 class="section-title">Where I've worked.</h2>
+  <div class="exp-list">
+
+    <div class="exp-item" onclick="toggleExp(this)">
+      <div class="exp-date">Jun – Aug 2025<br>Edison, NJ</div>
+      <div class="exp-content">
+        <div class="exp-role">AI Agent Developer Intern</div>
+        <div class="exp-company">Tata Consultancy Services</div>
+        <div class="exp-toggle">↓ expand</div>
+        <div class="exp-body collapsed">
+          <p class="exp-desc">Built an AI-driven pricing agent across 5K+ SKUs and a Vision AI proof-of-concept for warehouse operations. Translated outputs into exec-ready demos that secured pilot approval. Selected as 1 of 3 top interns out of 50+.</p>
+          <div class="exp-tags tag-row" style="margin-top:0.75rem"><span class="tag">Azure OpenAI</span><span class="tag">Python</span><span class="tag">n8n</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item" onclick="toggleExp(this)">
+      <div class="exp-date">May – Jul 2024<br>Haryana, India</div>
+      <div class="exp-content">
+        <div class="exp-role">Strategy & Data Engineering Intern</div>
+        <div class="exp-company">Deloitte Consulting</div>
+        <div class="exp-toggle">↓ expand</div>
+        <div class="exp-body collapsed">
+          <p class="exp-desc">Supported commercial strategy for Fortune 500 MedTech clients. Built territory planning models, lead scoring tools, and a 1,800+ account BD toolkit. Identified 18–25% regional growth potential and supported 2 active RFPs.</p>
+          <div class="exp-tags tag-row" style="margin-top:0.75rem"><span class="tag">SQL</span><span class="tag">Python</span><span class="tag">Power BI</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item" onclick="toggleExp(this)">
+      <div class="exp-date">Jun – Aug 2023<br>Noida, India</div>
+      <div class="exp-content">
+        <div class="exp-role">Data Analyst Intern</div>
+        <div class="exp-company">RMSI</div>
+        <div class="exp-toggle">↓ expand</div>
+        <div class="exp-body collapsed">
+          <p class="exp-desc">Designed interactive landslide-risk dashboards improving detection precision by 25–35%. Built a daily early-warning system deployed across multiple agencies, reducing response costs by 15–20%.</p>
+          <div class="exp-tags tag-row" style="margin-top:0.75rem"><span class="tag">QGIS</span><span class="tag">Python</span><span class="tag">GIS</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<footer>
+  <p>© 2026 Yash Mantri · yashmantri.com</p>
+  <div class="footer-links">
+    <a href="mailto:yash.mantri@berkeley.edu">Email</a>
+    <a href="https://linkedin.com/in/yashmantri" target="_blank">LinkedIn</a>
+    <a href="https://github.com/yashmantri" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+function animateRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animateRing); }
+animateRing();
+document.querySelectorAll('a,button,label,.hobby-pill,.project-card,.exp-item,.btn,.stat-item').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+// SCROLL PROGRESS
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// LIVE CLOCK (SF time)
+function updateClock() {
+  const now = new Date();
+  const sf = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
+  document.getElementById('nav-clock').textContent = 'SF · ' + sf;
+}
+updateClock(); setInterval(updateClock, 1000);
+
+// TYPEWRITER
+const phrases = [
+  "Economics & Data Science grad from UC Berkeley.",
+  "I build AI agents that do the boring work.",
+  "I turn messy data into decisions that ship.",
+  "Occasional half-marathoner. Perpetual speedcuber."
+];
+let pi = 0, ci = 0, deleting = false, wait = 0;
+function typewrite() {
+  const el = document.getElementById('cursor-span');
+  const phrase = phrases[pi];
+  if (wait > 0) { wait--; setTimeout(typewrite, 60); return; }
+  if (!deleting) {
+    el.textContent = phrase.slice(0, ++ci);
+    if (ci === phrase.length) { deleting = true; wait = 28; }
+    setTimeout(typewrite, 52);
+  } else {
+    el.textContent = phrase.slice(0, --ci);
+    if (ci === 0) { deleting = false; pi = (pi+1) % phrases.length; wait = 6; }
+    setTimeout(typewrite, 28);
+  }
+}
+typewrite();
+
+// COUNTER ANIMATION
+function animateCount(id, target, duration) {
+  const el = document.getElementById(id);
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.round(ease * target);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// AUTO RUN COUNT
+const baseline = 145, baseDate = new Date('2026-05-01');
+const weeks = Math.floor((new Date() - baseDate) / (7*24*60*60*1000));
+const currentRuns = baseline + weeks * 2;
+
+// TRIGGER COUNTERS ON SCROLL
+const statsObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCount('run-count', currentRuns, 1200);
+      animateCount('hm-count', 2, 600);
+      animateCount('proj-count', 3, 800);
+      animateCount('sudoku-count', 500, 1400);
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+statsObserver.observe(document.querySelector('.stats-strip'));
+
+// RUN TOGGLE
+function toggleRuns() {
+  document.getElementById('run-detail').classList.toggle('open', document.getElementById('run-toggle').checked);
+}
+
+// EXPAND EXPERIENCE
+function toggleExp(item) {
+  const body = item.querySelector('.exp-body');
+  const toggle = item.querySelector('.exp-toggle');
+  const isOpen = body.classList.contains('expanded');
+  body.classList.toggle('collapsed', isOpen);
+  body.classList.toggle('expanded', !isOpen);
+  toggle.textContent = isOpen ? '↓ expand' : '↑ collapse';
+}
+
+// FADE IN ON SCROLL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
